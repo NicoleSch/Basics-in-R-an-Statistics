@@ -17,7 +17,7 @@ library(tidyverse)
 library(lubridate)
 
 ## Introduction
-The aim of this exercise is to visualize the increase of confirmed cases of Ebola in Spain, Liberia, and Sierra Leone. Here I made changes
+The aim of this exercise is to visualize the increase of confirmed cases of Ebola in Spain, Liberia, and Sierra Leone.
 
 ## Running Code
 
