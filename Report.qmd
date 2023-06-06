@@ -10,27 +10,64 @@ format:
     embed-resources: true
 ---
 
-## Load libraries
-#| output: false
+
+```{r}
+#\| output: false
+#Load libraries
 library(here)
 library(tidyverse)
 library(lubridate)
+```
 
 ## Introduction
+
 The aim of this exercise is to visualize the increase of confirmed cases of Ebola in Spain, Liberia, and Sierra Leone.
 
-## Running Code
-
-
-```{r}
-1 + 1
-```
-
-You can add options to executable code like this
+## Data
 
 ```{r}
-#| echo: false
-2 * 2
+#| output: false
+# Read data
+dat <- read_csv("~/Documents/PhD/Basics in Statistics and R/Excercise01/data/raw/ebola.csv")
+
+#Sort data
+dat_before <- dat |> filter(Date < "2015-04-01") #Filter by dates before 31.03.2015
+
+dat_countries <- dat_before |> filter(Country %in% c("Spain", "Sierra Leone", "Liberia"))
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+## Results
+
+@fig-cases shows the number of confirmed cases of Ebola in Liberia, Spain, and Sierra Leone
+
+```{r}
+#| label: fig-cases
+#| fig-cap: "Confirmed cases of Ebola in Liberia, Spain, and Sierra Leone"
+#| fig-width: 8
+#| fig-height: 4
+ggplot(data = dat_countries, 
+                               mapping = aes(x = Date, y = Cum_conf_cases, fill = Country, colour = Country)) + 
+  geom_point(alpha = 0.7, shape = 21, size = 1.5, stroke = 1.5) +
+  scale_fill_manual(name = "Country",
+                    breaks = c("Liberia", "Sierra Leone", "Spain"),
+                    values = c("red", "purple","navy"),
+                    labels = c("Liberia", "Sierra Leone", "Spain")) +
+  scale_colour_manual(name = "Country",
+                      breaks = c("Liberia", "Sierra Leone", "Spain"),
+                      values = c("red", "purple", "navy"),
+                      labels = c("Liberia", "Sierra Leone", "Spain")) +
+  scale_x_date(breaks = as.Date(c("2014-08-29", "2014-10-01", "2014-12-01", "2015-02-01", 
+                                  "2015-04-01")),
+               labels = c("29 August", "1 October", "1 December", "1 February", "1 April"),
+               limits = as.Date(c("2014-08-29", "2015-04-01"))) +
+  scale_y_continuous(breaks = seq(from = 0, to = 10000, by = 2000),
+                     limits = c(0, 10000)) +
+  ggtitle(label = "Confirmed ebola cases") +
+  xlab(label = "Time") +
+  ylab(label = "Cum. # of confirmed cases") +
+  theme_bw() + theme(legend.position="bottom")
+```
+
+## Conclusions
+
+The number of confirmed Ebola and in Spain are low, whereas Libera and Sierra Leone showed a steeo increase in confirmed cases.
